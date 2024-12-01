@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var input_path : String = "res://Day1/input.txt"
+var input_path : String = "res://Day1/input.txt"
 var left_list : Array[int]
 var right_list : Array[int]
 
