@@ -12,44 +12,38 @@ func _ready() -> void:
 
 func part_one() -> void:
 	var reports := get_reports()
-	var total_safe := 0
+	var safe_reports = reports.filter(report_safety)
 
-	for report in reports:
-		if list_safety(report):
-			total_safe += 1
-
-	print("Total safe: ", total_safe)
+	print("Total safe: ", safe_reports.size())
 
 
 func part_two() -> void:
 	var reports := get_reports()
-	var new_report : Array[int]
-	var is_safe := false
+	var report_perm : Array[int]
+	var report_perms : Array[Array]
 	var total_safe := 0
 
 	for report in reports:
+		report_perms.clear()
 		for i in report.size():
-			new_report = report.duplicate()
-			new_report.remove_at(i)
-			is_safe = list_safety(new_report)
+			report_perm = report.duplicate()
+			report_perm.remove_at(i)
+			report_perms.append(report_perm)
 
-			if is_safe:
-				break
-
-		if is_safe:
+		if report_perms.any(report_safety):
 			total_safe += 1
 
 	print("Total safe: ", total_safe)
 
 
-func list_safety(list: Array) -> bool:
+func report_safety(report: Array) -> bool:
 	var last_diff := 0
 	var curr_diff := 0
 
-	for i in list.size():
+	for i in report.size():
 		if i == 0:
 			continue
-		curr_diff = list[i] - list[i - 1]
+		curr_diff = report[i] - report[i - 1]
 		if curr_diff == 0:
 			return false
 		if curr_diff < 0 and last_diff > 0:
@@ -66,8 +60,8 @@ func list_safety(list: Array) -> bool:
 func get_reports() -> Array[Array]:
 	var input_file := FileAccess.open(input_path, FileAccess.READ)
 	var report : PackedStringArray
-	var levels : Array[int]
 	var reports : Array[Array]
+	var levels : Array[int]
 
 	while !input_file.eof_reached():
 		report = input_file.get_line().split(" ", false)
