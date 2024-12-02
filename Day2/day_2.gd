@@ -43,7 +43,6 @@ func part_two() -> void:
 
 
 func list_safety(list: Array) -> bool:
-	var is_safe := true
 	var last_diff := 0
 	var curr_diff := 0
 
@@ -52,20 +51,16 @@ func list_safety(list: Array) -> bool:
 			continue
 		curr_diff = list[i] - list[i - 1]
 		if curr_diff == 0:
-			is_safe = false
-			break
+			return false
 		if curr_diff < 0 and last_diff > 0:
-			is_safe = false
-			break
+			return false
 		if curr_diff > 0 and last_diff < 0:
-			is_safe = false
-			break
+			return false
 		if abs(curr_diff) > 3:
-			is_safe = false
-			break
+			return false
 		last_diff = curr_diff
 
-	return is_safe
+	return true
 
 
 func get_reports() -> Array[Array]:
