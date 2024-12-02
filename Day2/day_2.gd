@@ -2,6 +2,7 @@ extends Node2D
 
 var input_path : String = "res://Day2/input.txt"
 # var input_path : String = "res://Day2/test.txt"
+@onready var reports := get_reports()
 
 
 func _ready() -> void:
@@ -11,17 +12,11 @@ func _ready() -> void:
 
 
 func part_one() -> void:
-	var reports := get_reports()
-	var safe_reports = reports.filter(report_safety)
-
-	print("Total safe: ", safe_reports.size())
+	print("Total safe: ", reports.filter(report_safety).size())
 
 
 func part_two() -> void:
-	var reports := get_reports()
-	var safe_reports = reports.filter(perms_safety)
-
-	print("Total safe: ", safe_reports.size())
+	print("Total safe: ", reports.filter(perms_safety).size())
 
 
 func report_safety(report: Array[int]) -> bool:
@@ -61,8 +56,8 @@ func perms_safety(report: Array[int]) -> bool:
 func get_reports() -> Array[Array]:
 	var input_file := FileAccess.open(input_path, FileAccess.READ)
 	var report : PackedStringArray
-	var reports : Array[Array]
 	var levels : Array[int]
+	var _reports : Array[Array]
 
 	while !input_file.eof_reached():
 		report = input_file.get_line().split(" ", false)
@@ -71,6 +66,6 @@ func get_reports() -> Array[Array]:
 		levels = []
 		for level in report:
 			levels.append(int(level))
-		reports.append(levels)
+		_reports.append(levels)
 
-	return reports
+	return _reports
