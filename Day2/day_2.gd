@@ -12,34 +12,10 @@ func _ready() -> void:
 
 func part_one() -> void:
 	var reports := get_reports()
-	var last_diff := 0
-	var curr_diff := 0
-	var is_safe := false
 	var total_safe := 0
 
 	for report in reports:
-		is_safe = true
-		last_diff = 0
-
-		for i in report.size():
-			if i == 0:
-				continue
-			curr_diff = report[i] - report[i - 1]
-			if curr_diff == 0:
-				is_safe = false
-				break
-			if curr_diff < 0 and last_diff > 0:
-				is_safe = false
-				break
-			if curr_diff > 0 and last_diff < 0:
-				is_safe = false
-				break
-			if abs(curr_diff) > 3:
-				is_safe = false
-				break
-			last_diff = curr_diff
-
-		if is_safe:
+		if list_safety(report):
 			total_safe += 1
 
 	print("Total safe: ", total_safe)
@@ -47,36 +23,15 @@ func part_one() -> void:
 
 func part_two() -> void:
 	var reports := get_reports()
-	var last_diff := 0
-	var curr_diff := 0
+	var new_report : Array[int]
 	var is_safe := false
 	var total_safe := 0
-	var new_report : Array[int]
 
 	for report in reports:
 		for i in report.size():
 			new_report = report.duplicate()
 			new_report.remove_at(i)
-			is_safe = true
-			last_diff = 0
-
-			for j in new_report.size():
-				if j == 0:
-					continue
-				curr_diff = new_report[j] - new_report[j - 1]
-				if curr_diff == 0:
-					is_safe = false
-					break
-				if curr_diff < 0 and last_diff > 0:
-					is_safe = false
-					break
-				if curr_diff > 0 and last_diff < 0:
-					is_safe = false
-					break
-				if abs(curr_diff) > 3:
-					is_safe = false
-					break
-				last_diff = curr_diff
+			is_safe = list_safety(new_report)
 
 			if is_safe:
 				break
@@ -85,6 +40,32 @@ func part_two() -> void:
 			total_safe += 1
 
 	print("Total safe: ", total_safe)
+
+
+func list_safety(list: Array) -> bool:
+	var is_safe := true
+	var last_diff := 0
+	var curr_diff := 0
+
+	for i in list.size():
+		if i == 0:
+			continue
+		curr_diff = list[i] - list[i - 1]
+		if curr_diff == 0:
+			is_safe = false
+			break
+		if curr_diff < 0 and last_diff > 0:
+			is_safe = false
+			break
+		if curr_diff > 0 and last_diff < 0:
+			is_safe = false
+			break
+		if abs(curr_diff) > 3:
+			is_safe = false
+			break
+		last_diff = curr_diff
+
+	return is_safe
 
 
 func get_reports() -> Array[Array]:
