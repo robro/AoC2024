@@ -19,24 +19,12 @@ func part_one() -> void:
 
 func part_two() -> void:
 	var reports := get_reports()
-	var report_perm : Array[int]
-	var report_perms : Array[Array]
-	var total_safe := 0
+	var safe_reports = reports.filter(perms_safety)
 
-	for report in reports:
-		report_perms.clear()
-		for i in report.size():
-			report_perm = report.duplicate()
-			report_perm.remove_at(i)
-			report_perms.append(report_perm)
-
-		if report_perms.any(report_safety):
-			total_safe += 1
-
-	print("Total safe: ", total_safe)
+	print("Total safe: ", safe_reports.size())
 
 
-func report_safety(report: Array) -> bool:
+func report_safety(report: Array[int]) -> bool:
 	var last_diff := 0
 	var curr_diff := 0
 
@@ -55,6 +43,19 @@ func report_safety(report: Array) -> bool:
 		last_diff = curr_diff
 
 	return true
+
+
+func perms_safety(report: Array[int]) -> bool:
+	var report_perm : Array[int]
+
+	for i in report.size():
+		report_perm = report.duplicate()
+		report_perm.remove_at(i)
+
+		if report_safety(report_perm):
+			return true
+
+	return false
 
 
 func get_reports() -> Array[Array]:
