@@ -2,23 +2,32 @@ extends Node2D
 
 var input_path := "res://Day3/input.txt"
 # var input_path := "res://Day3/test.txt"
+# var input_path := "res://Day3/test2.txt"
 var regex := RegEx.new()
+var regex_str := r"mul\((\d+),(\d+)\)"
+@onready var input_str := FileAccess.open(input_path, FileAccess.READ).get_as_text().replace("\n", "")
 
 
 func _ready() -> void:
 	print("Day 3")
 	part_one()
+	part_two()
 
 
 func part_one() -> void:
-	regex.compile(r"mul\((\d+),(\d+)\)")
-	var input_file := FileAccess.open(input_path, FileAccess.READ)
-	var input_str := input_file.get_as_text()
-	var matches := regex.search_all(input_str)
-	var muls := matches.map(mul_match)
-	var results : int = muls.reduce(sum_with_accum)
+	print("Results: ", get_results(input_str))
 
-	print("Results: ", results)
+
+func part_two() -> void:
+	regex.compile(r"don't\(\).*?(?=do\(\)|$)")
+	var sub_str := regex.sub(input_str, "", true)
+
+	print("Results: ", get_results(sub_str))
+
+
+func get_results(search_str: String) -> int:
+	regex.compile(regex_str)
+	return regex.search_all(search_str).map(mul_match).reduce(sum_with_accum)
 
 
 func sum_with_accum(accum: int, num: int) -> int:

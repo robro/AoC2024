@@ -2,4 +2,4 @@
 .godot/
 /android/
 input.txt
-test.txt
+test*.txt
