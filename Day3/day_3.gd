@@ -15,14 +15,14 @@ func _ready() -> void:
 
 
 func part_one() -> void:
-	print("Results: ", get_results(input_str))
+	print("Part One: ", get_results(input_str))
 
 
 func part_two() -> void:
 	regex.compile(r"don't\(\).*?(?=do\(\)|$)")
 	var sub_str := regex.sub(input_str, "", true)
 
-	print("Results: ", get_results(sub_str))
+	print("Part Two: ", get_results(sub_str))
 
 
 func get_results(search_str: String) -> int:
