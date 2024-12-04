@@ -8,6 +8,7 @@ var input_path := "res://Day4/input.txt"
 func _ready() -> void:
 	print("Day 4")
 	part_one()
+	part_two()
 
 
 func part_one() -> void:
@@ -18,6 +19,17 @@ func part_one() -> void:
 			result += xmas_count(x, y)
 
 	print("Part One: ", result)
+
+
+func part_two() -> void:
+	var result := 0
+
+	for y in input_lines.size():
+		for x in input_lines[0].length():
+			if is_x_mas(x, y):
+				result += 1
+
+	print("Part Two: ", result)
 
 
 func xmas_count(x: int, y: int) -> int:
@@ -59,6 +71,37 @@ func xmas_count(x: int, y: int) -> int:
 			xmas_index += 1
 
 	return count
+
+
+func is_x_mas(x: int, y: int) -> bool:
+	if x < 1 or y < 1:
+		return false
+	if x >= input_lines[0].length() - 1 or y >= input_lines.size() - 1:
+		return false
+	if input_lines[y][x] != "A":
+		return false
+
+	var offsets := [
+		Vector2i(-1 , -1),
+		Vector2i(1, -1),
+		Vector2i(1, 1),
+		Vector2i(-1, 1),
+	]
+	var patterns := [
+		"SSMM",
+		"SMMS",
+		"MMSS",
+		"MSSM",
+	]
+
+	for pattern in patterns:
+		for i in 4:
+			if input_lines[y + offsets[i].y][x + offsets[i].x] != pattern[i]:
+				break
+			if i == 3:
+				return true
+
+	return false
 
 
 func get_input_lines() -> Array[String]:
