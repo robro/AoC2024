@@ -72,6 +72,10 @@ func set_rules_and_updates() -> void:
 				is_update_line = true
 			continue
 		if !is_update_line:
-			rules.append(Array(curr_line.split("|")).map(func(x: String) -> int: return int(x)))
+			rules.append(Array(curr_line.split("|")).map(str_to_int))
 		else:
-			updates.append(Array(curr_line.split(",")).map(func(x: String) -> int: return int(x)))
+			updates.append(Array(curr_line.split(",")).map(str_to_int))
+
+
+func str_to_int(s: String) -> int:
+	return int(s)
