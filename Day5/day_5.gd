@@ -2,8 +2,8 @@ extends Node2D
 
 var input_path := "res://Day5/input.txt"
 # var input_path := "res://Day5/test.txt"
-@onready var rules : Array
-@onready var updates : Array
+var rules : Array
+var updates : Array
 
 
 func _ready() -> void:
