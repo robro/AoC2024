@@ -9,6 +9,7 @@ var input_path := "res://Day5/input.txt"
 func _ready() -> void:
 	print("Day 5")
 	part_one()
+	part_two()
 
 
 func part_one() -> void:
@@ -35,6 +36,55 @@ func part_one() -> void:
 			result += update[update.size() / 2]
 
 	print("Part One: ", result)
+
+
+func part_two() -> void:
+	var left_num_index := -1
+	var right_num_index := -1
+	var is_correct : bool
+	var result := 0
+
+	for update in updates:
+		is_correct = true
+
+		for rule in rules:
+			left_num_index = update.find(rule[0])
+			right_num_index = update.find(rule[1])
+
+			if left_num_index == -1 or right_num_index == -1:
+				continue
+			if left_num_index > right_num_index:
+				is_correct = false
+				break
+
+		if !is_correct:
+			@warning_ignore("integer_division")
+			result += get_correct_update(update)[update.size() / 2]
+
+	print("Part Two: ", result)
+
+
+func get_correct_update(update: Array) -> Array:
+	var correct_update := update.duplicate()
+	var left_num_index := -1
+	var right_num_index := -1
+	var is_correct := false
+
+	while !is_correct:
+		is_correct = true
+
+		for rule in rules:
+			left_num_index = correct_update.find(rule[0])
+			right_num_index = correct_update.find(rule[1])
+
+			if left_num_index == -1 or right_num_index == -1:
+				continue
+			if left_num_index > right_num_index:
+				correct_update.insert(left_num_index, correct_update.pop_at(right_num_index))
+				is_correct = false
+				break
+
+	return correct_update
 
 
 func get_rules() -> Array[Array]:
