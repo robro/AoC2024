@@ -7,9 +7,29 @@ var input_path := "res://Day7/input.txt"
 func _ready() -> void:
 	print("Day 7")
 	part_one()
+	part_two()
 
 
 func part_one() -> void:
+	const operators : Array[String] = [
+		"add",
+		"mul",
+	]
+
+	print("Part One: ", total_calibration(operators))
+
+
+func part_two() -> void:
+	const operators : Array[String] = [
+		"add",
+		"mul",
+		"concat",
+	]
+
+	print("Part Two: ", total_calibration(operators))
+
+
+func total_calibration(operators: Array[String]) -> int:
 	var input_file := FileAccess.open(input_path, FileAccess.READ)
 	var curr_line : String
 	var result := 0
@@ -17,10 +37,6 @@ func part_one() -> void:
 	var nums : PackedFloat64Array
 	var perms : Array[Array]
 	var sep_index := -1
-	const operators := [
-		"add",
-		"mul",
-	]
 
 	while !input_file.eof_reached():
 		curr_line = input_file.get_line()
@@ -36,7 +52,7 @@ func part_one() -> void:
 				result += test_value
 				break
 
-	print("Part One: ", result)
+	return result
 
 
 func true_equation(nums: PackedFloat64Array, perm: Array, test_value: int) -> bool:
@@ -82,3 +98,7 @@ func add(a: float, b: float) -> float:
 
 func mul(a: float, b: float) -> float:
 	return a * b
+
+
+func concat(a: float, b: float) -> float:
+	return float(str(a) + str(b))
