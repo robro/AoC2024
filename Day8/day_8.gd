@@ -8,6 +8,7 @@ var area : Rect2
 func _ready() -> void:
 	print("Day 8")
 	part_one()
+	part_two()
 
 
 func part_one() -> void:
@@ -19,6 +20,17 @@ func part_one() -> void:
 			add_antinodes(pair, antinodes)
 
 	print("Part One: ", antinodes.size())
+
+
+func part_two() -> void:
+	var antennas = get_antennas()
+	var antinodes : Dictionary
+
+	for a_type in antennas.values():
+		for pair in get_pairs(a_type):
+			add_antinodes_pt2(pair, antinodes)
+
+	print("Part Two: ", antinodes.size())
 
 
 func get_pairs(arr: Array) -> Array[Array]:
@@ -40,6 +52,25 @@ func add_antinodes(pair: Array, antinodes: Dictionary) -> void:
 			antinode = call(op, node, diff)
 			if antinode not in pair and area.has_point(antinode):
 				antinodes[antinode] = true
+
+
+func add_antinodes_pt2(pair: Array, antinodes: Dictionary) -> void:
+	var diff : Vector2 = pair[0] - pair[1]
+	var curr_node := Vector2.ZERO
+	var last_node := Vector2.ZERO
+
+	for node in pair:
+		antinodes[node] = true
+
+		for op in ["add", "sub"]:
+			last_node = node
+
+			while true:
+				curr_node = call(op, last_node, diff)
+				if curr_node in pair or not area.has_point(curr_node):
+					break
+				antinodes[curr_node] = true
+				last_node = curr_node
 
 
 func get_antennas() -> Dictionary:
