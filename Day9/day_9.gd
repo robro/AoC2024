@@ -2,6 +2,7 @@ extends Node2D
 
 var input_path := "res://Day9/input.txt"
 # var input_path := "res://Day9/test.txt"
+# var input_path := "res://Day9/test2.txt"
 
 
 func _ready() -> void:
@@ -65,7 +66,7 @@ func part_two() -> void:
 
 		space_size = 0
 		while space_size < file_size:
-			while disk_blocks[space_ptr] is int:
+			while disk_blocks[space_ptr] is int and space_ptr <= file_ptr:
 				space_ptr += 1
 
 			if space_ptr > file_ptr:
