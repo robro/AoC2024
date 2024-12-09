@@ -43,33 +43,38 @@ func part_two() -> void:
 	var disk_map := FileAccess.open(input_path, FileAccess.READ).get_line()
 	var disk_blocks := get_disk_blocks(disk_map)
 	var space_ptr := 0
-	var file_ptr := disk_blocks.size()
-	@warning_ignore("integer_division")
-	var file_id := disk_map.length() / 2
+	var file_ptr := disk_blocks.size() - 1
+	var file_id : Variant = disk_blocks[file_ptr]
 	var file_size := 0
 	var space_size := 0
 	var temp_value : Variant
 	var checksum := 0
 	var contiguous_file_blocks := 0
 
+	while not file_id is int:
+		file_ptr -= 1
+		file_id = disk_blocks[file_ptr]
+
 	while file_id > 0:
-		space_size = 0
-		if file_id * 2 < disk_map.length() - 1:
-			space_size = int(disk_map[file_id * 2 + 1])
-		file_size = int(disk_map[file_id * 2])
-		file_ptr -= file_size + space_size
+		while not disk_blocks[file_ptr] is int or disk_blocks[file_ptr] != file_id:
+			file_ptr -= 1
+
+		file_size = 1
+		while disk_blocks[file_ptr-1] is int and disk_blocks[file_ptr-1] == file_id:
+			file_ptr -= 1
+			file_size += 1
 
 		space_ptr = contiguous_file_blocks
-		while disk_blocks[space_ptr] is int:
-				space_ptr += 1
+		while disk_blocks[space_ptr] is int and space_ptr < disk_blocks.size() - 1:
+			space_ptr += 1
 		contiguous_file_blocks = space_ptr
 
 		space_size = 0
 		while space_size < file_size:
-			while disk_blocks[space_ptr] is int and space_ptr <= file_ptr:
+			while disk_blocks[space_ptr] is int and space_ptr < file_ptr:
 				space_ptr += 1
 
-			if space_ptr > file_ptr:
+			if space_ptr >= file_ptr:
 				break
 
 			space_size = 0
@@ -77,7 +82,7 @@ func part_two() -> void:
 				space_ptr += 1
 				space_size += 1
 
-		if space_ptr <= file_ptr:
+		if space_size >= file_size:
 			for i in file_size:
 				temp_value = disk_blocks[file_ptr + i]
 				disk_blocks[file_ptr + i] = disk_blocks[space_ptr - space_size + i]
