@@ -49,6 +49,7 @@ func part_two() -> void:
 	var space_size := 0
 	var temp_value : Variant
 	var checksum := 0
+	var contiguous_file_blocks := 0
 
 	while file_id > 0:
 		space_size = 0
@@ -57,7 +58,11 @@ func part_two() -> void:
 		file_size = int(disk_map[file_id * 2])
 		file_ptr -= file_size + space_size
 
-		space_ptr = 0
+		space_ptr = contiguous_file_blocks
+		while disk_blocks[space_ptr] is int:
+				space_ptr += 1
+		contiguous_file_blocks = space_ptr
+
 		space_size = 0
 		while space_size < file_size:
 			while disk_blocks[space_ptr] is int:
