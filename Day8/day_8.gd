@@ -3,6 +3,7 @@ extends Node2D
 var input_path := "res://Day8/input.txt"
 # var input_path := "res://Day8/test.txt"
 var area : Rect2
+@onready var antennas := get_antennas()
 
 
 func _ready() -> void:
@@ -12,7 +13,6 @@ func _ready() -> void:
 
 
 func part_one() -> void:
-	var antennas = get_antennas()
 	var antinodes : Dictionary
 
 	for a_type in antennas.values():
@@ -23,7 +23,6 @@ func part_one() -> void:
 
 
 func part_two() -> void:
-	var antennas = get_antennas()
 	var antinodes : Dictionary
 
 	for a_type in antennas.values():
@@ -59,23 +58,22 @@ func add_antinodes_pt2(pair: Array, antinodes: Dictionary) -> void:
 	var curr_node := Vector2.ZERO
 	var last_node := Vector2.ZERO
 
-	for node in pair:
-		antinodes[node] = true
+	antinodes[pair[0]] = true
 
-		for op in ["add", "sub"]:
-			last_node = node
+	for op in ["add", "sub"]:
+		last_node = pair[0]
 
-			while true:
-				curr_node = call(op, last_node, diff)
-				if curr_node in pair or not area.has_point(curr_node):
-					break
-				antinodes[curr_node] = true
-				last_node = curr_node
+		while true:
+			curr_node = call(op, last_node, diff)
+			if !area.has_point(curr_node):
+				break
+			antinodes[curr_node] = true
+			last_node = curr_node
 
 
 func get_antennas() -> Dictionary:
 	var input_file = FileAccess.open(input_path, FileAccess.READ)
-	var antennas : Dictionary
+	var _antennas : Dictionary
 	var curr_line : String
 	var x := 0
 	var y := 0
@@ -88,10 +86,10 @@ func get_antennas() -> Dictionary:
 		x = 0
 		for c in curr_line:
 			if c != ".":
-				if antennas.has(c):
-					antennas[c].append(Vector2(x, y))
+				if _antennas.has(c):
+					_antennas[c].append(Vector2(x, y))
 				else:
-					antennas[c] = [Vector2(x, y)]
+					_antennas[c] = [Vector2(x, y)]
 			x += 1
 			if x > area.size.x:
 				area.size.x = x
@@ -99,7 +97,7 @@ func get_antennas() -> Dictionary:
 		if y > area.size.y:
 			area.size.y = y
 
-	return antennas
+	return _antennas
 
 
 func add(a: Vector2, b: Vector2) -> Vector2:
