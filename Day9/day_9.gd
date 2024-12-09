@@ -7,6 +7,7 @@ var input_path := "res://Day9/input.txt"
 func _ready() -> void:
 	print("Day 9")
 	part_one()
+	part_two()
 
 
 func part_one() -> void:
@@ -35,6 +36,55 @@ func part_one() -> void:
 		checksum += disk_blocks[i] * i
 
 	print("Part One: ", checksum)
+
+
+func part_two() -> void:
+	var disk_map := FileAccess.open(input_path, FileAccess.READ).get_line()
+	var disk_blocks := get_disk_blocks(disk_map)
+	var space_ptr := 0
+	var file_ptr := disk_blocks.size()
+	@warning_ignore("integer_division")
+	var file_id := disk_map.length() / 2
+	var file_size := 0
+	var space_size := 0
+	var temp_value : Variant
+	var checksum := 0
+
+	while file_id > 0:
+		space_size = 0
+		if file_id * 2 < disk_map.length() - 1:
+			space_size = int(disk_map[file_id * 2 + 1])
+		file_size = int(disk_map[file_id * 2])
+		file_ptr -= file_size + space_size
+
+		space_ptr = 0
+		space_size = 0
+		while space_size < file_size:
+			while disk_blocks[space_ptr] is int:
+				space_ptr += 1
+
+			if space_ptr > file_ptr:
+				break
+
+			space_size = 0
+			while disk_blocks[space_ptr] is String:
+				space_ptr += 1
+				space_size += 1
+
+		if space_ptr <= file_ptr:
+			for i in file_size:
+				temp_value = disk_blocks[file_ptr + i]
+				disk_blocks[file_ptr + i] = disk_blocks[space_ptr - space_size + i]
+				disk_blocks[space_ptr - space_size + i] = temp_value
+
+		file_id -= 1
+
+	for i in disk_blocks.size():
+		if not disk_blocks[i] is int:
+			continue
+		checksum += disk_blocks[i] * i
+
+	print("Part Two: ", checksum)
 
 
 func get_disk_blocks(disk_map: String) -> Array:
