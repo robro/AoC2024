@@ -8,6 +8,7 @@ var map := get_map()
 func _ready() -> void:
 	print("Day 10")
 	part_one()
+	part_two()
 
 
 func part_one() -> void:
@@ -21,12 +22,24 @@ func part_one() -> void:
 	print("Part One: ", score_sum)
 
 
-func get_score(start_pos: Vector2) -> int:
+func part_two() -> void:
+	var score_sum := 0
+
+	for y in map.size():
+		for x in map[y].size():
+			if map[y][x] == 0:
+				score_sum += get_score(Vector2(x, y), true)
+
+	print("Part Two: ", score_sum)
+
+
+func get_score(start_pos: Vector2, use_rating: bool = false) -> int:
 	var end_points : Dictionary
 	var queue := [start_pos]
 	var curr_height : int
 	var curr_pos : Vector2
 	var next_pos : Vector2
+	var rating := 0
 	const directions := [
 		Vector2.UP,
 		Vector2.RIGHT,
@@ -39,6 +52,7 @@ func get_score(start_pos: Vector2) -> int:
 		curr_height = map[curr_pos.y][curr_pos.x]
 		if curr_height == 9:
 			end_points[curr_pos] = true
+			rating += 1
 			continue
 		for direction in directions:
 			next_pos = curr_pos + direction
@@ -50,6 +64,8 @@ func get_score(start_pos: Vector2) -> int:
 				continue
 			queue.append(next_pos)
 
+	if use_rating:
+		return rating
 	return end_points.size()
 
 
