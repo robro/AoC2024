@@ -53,11 +53,7 @@ func get_contiguous_crop(pos: Vector2) -> Array[int]:
 			test_pos = curr_pos + offset
 			if visited.has(test_pos):
 				continue
-			if test_pos.x < 0 or test_pos.y < 0:
-				continue
-			if test_pos.x >= garden[0].size() or test_pos.y >= garden.size():
-				continue
-			if garden[test_pos.y][test_pos.x] != garden[pos.y][pos.x]:
+			if !adjacent_match(curr_pos, offset):
 				continue
 			queue.append(test_pos)
 
@@ -66,7 +62,6 @@ func get_contiguous_crop(pos: Vector2) -> Array[int]:
 
 func get_perimeter_value(pos: Vector2) -> int:
 	var perimeter_value := 0
-	var test_pos : Vector2
 	const offsets := [
 		Vector2.UP,
 		Vector2.RIGHT,
@@ -75,12 +70,7 @@ func get_perimeter_value(pos: Vector2) -> int:
 	]
 
 	for offset in offsets:
-		test_pos = pos + offset
-		if test_pos.x < 0 or test_pos.y < 0:
-			perimeter_value += 1
-		elif test_pos.x >= garden[0].size() or test_pos.y >= garden.size():
-			perimeter_value += 1
-		elif garden[test_pos.y][test_pos.x] != garden[pos.y][pos.x]:
+		if !adjacent_match(pos, offset):
 			perimeter_value += 1
 
 	return perimeter_value
@@ -98,3 +88,16 @@ func get_garden() -> Array[Array]:
 		_garden.append(Array(curr_line.split("")))
 
 	return _garden
+
+
+func adjacent_match(pos: Vector2, offset: Vector2) -> bool:
+	var test_pos := pos + offset
+
+	if test_pos.x < 0 or test_pos.y < 0:
+		return false
+	if test_pos.x >= garden[0].size() or test_pos.y >= garden.size():
+		return false
+	if garden[test_pos.y][test_pos.x] != garden[pos.y][pos.x]:
+		return false
+
+	return true
